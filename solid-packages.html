@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solid Packages - LogiFlow</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>LogiFlow</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="service-request.html" class="nav-link">Request Service</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="hero" style="min-height: 60vh; padding-top: 120px;">
+        <div class="hero-content">
+            <h1>Solid Package Shipping</h1>
+            <p>Reliable transportation for solid goods with comprehensive tracking and secure handling</p>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </section>
+
+    <!-- Solid Package Calculator -->
+    <section class="services" style="padding: 3rem 0;">
+        <div class="container">
+            <div class="calculation-container">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">
+                    <i class="fas fa-box"></i> Solid Package Calculator
+                </h2>
+                
+                <form class="calculation-form" id="solidCalculator">
+                    <div class="form-group">
+                        <label for="packageType">Package Type</label>
+                        <select id="packageType" required>
+                            <option value="">Select package type</option>
+                            <option value="standard">Standard Package</option>
+                            <option value="fragile">Fragile Items</option>
+                            <option value="heavy">Heavy Machinery</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="furniture">Furniture</option>
+                            <option value="automotive">Automotive Parts</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" min="0.1" step="0.1" required placeholder="Enter weight in kg">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="length">Length (cm)</label>
+                            <input type="number" id="length" min="1" step="1" required placeholder="Length">
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Width (cm)</label>
+                            <input type="number" id="width" min="1" step="1" required placeholder="Width">
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" min="1" step="1" required placeholder="Height">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="distance">Distance Type</label>
+                        <select id="distance" required>
+                            <option value="">Select distance type</option>
+                            <option value="local">Local (0-50 km)</option>
+                            <option value="domestic">Domestic (50-500 km)</option>
+                            <option value="international">International (500+ km)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service">Service Type</label>
+                        <select id="service" required>
+                            <option value="">Select service type</option>
+                            <option value="ground">Ground Transport</option>
+                            <option value="air">Air Freight</option>
+                            <option value="sea">Ocean Freight</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="fragile">
+                            Fragile Items (Extra Care Required)
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="insurance">
+                            Additional Insurance Coverage
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="express">
+                            Express Delivery (Priority Handling)
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-calculator"></i>
+                        Calculate Price
+                    </button>
+                </form>
+
+                <div id="solidResult" class="calculation-result" style="display: none;">
+                    <h3>Shipping Cost Estimate</h3>
+                    <div class="price" id="solidPrice"></div>
+                    <div id="solidBreakdown" style="margin-top: 1rem; text-align: left;">
+                        <h4>Cost Breakdown:</h4>
+                        <ul id="solidBreakdownList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solid Shipping Features -->
+    <section class="about" style="padding: 3rem 0;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Solid Package Features</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Packaging</h3>
+                    <p>Professional packaging solutions to ensure your goods arrive safely and undamaged.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Real-time Tracking</h3>
+                    <p>Track your package at every step with our advanced GPS tracking system.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h3>Careful Handling</h3>
+                    <p>Specialized handling for fragile and valuable items with trained professionals.</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Flexible Delivery</h3>
+                    <p>Choose from standard, express, or scheduled delivery options to suit your needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Package Size Guide -->
+    <section class="services" style="padding: 3rem 0; background: white;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Package Size Guide</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Small Package</h3>
+                    <p><strong>Dimensions:</strong> Up to 30x30x30 cm<br>
+                    <strong>Weight:</strong> Up to 5 kg<br>
+                    <strong>Best for:</strong> Documents, small electronics, clothing</p>
+                </div>
+                <div class="service-card">
+                    <h3>Medium Package</h3>
+                    <p><strong>Dimensions:</strong> Up to 60x60x60 cm<br>
+                    <strong>Weight:</strong> Up to 25 kg<br>
+                    <strong>Best for:</strong> Books, medium electronics, household items</p>
+                </div>
+                <div class="service-card">
+                    <h3>Large Package</h3>
+                    <p><strong>Dimensions:</strong> Up to 120x80x80 cm<br>
+                    <strong>Weight:</strong> Up to 70 kg<br>
+                    <strong>Best for:</strong> Furniture, appliances, machinery parts</p>
+                </div>
+                <div class="service-card">
+                    <h3>Oversized Package</h3>
+                    <p><strong>Dimensions:</strong> Custom handling<br>
+                    <strong>Weight:</strong> 70+ kg<br>
+                    <strong>Best for:</strong> Industrial equipment, large machinery</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LogiFlow</h3>
+                    <p>Your trusted partner in logistics and shipping solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="liquid-packages.html">Liquid Packages</a></li>
+                        <li><a href="solid-packages.html">Solid Packages</a></li>
+                        <li><a href="index.html#services">Freight Services</a></li>
+                        <li><a href="index.html#services">Warehousing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LogiFlow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Solid Package Calculator
+        document.getElementById('solidCalculator').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const packageType = document.getElementById('packageType').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const distance = document.getElementById('distance').value;
+            const service = document.getElementById('service').value;
+            const fragile = document.getElementById('fragile').checked;
+            const insurance = document.getElementById('insurance').checked;
+            const express = document.getElementById('express').checked;
+            
+            if (!packageType || !weight || !length || !width || !height || !distance || !service) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Create dimensions object
+            const dimensions = {
+                length: length,
+                width: width,
+                height: height,
+                fragile: fragile
+            };
+            
+            // Calculate price using the calculator class
+            const result = calculator.calculateSolidPackage(weight, dimensions, distance, service);
+            
+            // Apply additional factors
+            let finalPrice = result.price;
+            let additionalFactors = [];
+            
+            if (insurance) {
+                finalPrice *= 1.15;
+                additionalFactors.push('Insurance Coverage: +15%');
+            }
+            
+            if (express) {
+                finalPrice *= 1.3;
+                additionalFactors.push('Express Delivery: +30%');
+            }
+            
+            // Package type adjustments
+            let packageTypeFactor = 1.0;
+            switch(packageType) {
+                case 'fragile':
+                    packageTypeFactor = 1.4;
+                    additionalFactors.push('Fragile Items: +40%');
+                    break;
+                case 'heavy':
+                    packageTypeFactor = 1.25;
+                    additionalFactors.push('Heavy Machinery: +25%');
+                    break;
+                case 'electronics':
+                    packageTypeFactor = 1.2;
+                    additionalFactors.push('Electronics: +20%');
+                    break;
+                case 'furniture':
+                    packageTypeFactor = 1.15;
+                    additionalFactors.push('Furniture: +15%');
+                    break;
+                case 'automotive':
+                    packageTypeFactor = 1.3;
+                    additionalFactors.push('Automotive Parts: +30%');
+                    break;
+            }
+            finalPrice *= packageTypeFactor;
+            
+            // Display result
+            document.getElementById('solidPrice').textContent = `$${finalPrice.toFixed(2)}`;
+            
+            const breakdownList = document.getElementById('solidBreakdownList');
+            breakdownList.innerHTML = `
+                <li>Base Rate (${service}): $${result.breakdown.baseRate}/kg</li>
+                <li>Chargeable Weight: ${result.breakdown.chargeableWeight.toFixed(2)}kg</li>
+                <li>Distance Multiplier (${distance}): ${result.breakdown.distanceMultiplier}x</li>
+                <li>Fragility Factor: ${result.breakdown.fragilityFactor}x</li>
+                <li>Size Factor: ${result.breakdown.sizeFactor}x</li>
+                <li>Package Type (${packageType}): ${packageTypeFactor}x</li>
+                ${additionalFactors.map(factor => `<li>${factor}</li>`).join('')}
+            `;
+            
+            document.getElementById('solidResult').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
