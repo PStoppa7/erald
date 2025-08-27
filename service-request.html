@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +75,10 @@
                                 <label for="phone">Phone Number *</label>
                                 <input type="tel" id="phone" required placeholder="Enter phone number">
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="idNumber">ID Number *</label>
+                            <input type="text" id="idNumber" required placeholder="Enter your ID number">
                         </div>
                         <div class="form-group">
                             <label for="company">Company Name (Optional)</label>
@@ -228,16 +232,20 @@
                 </form>
 
                 <div id="requestSuccess" class="calculation-result" style="display: none;">
-                    <h3>Service Request Submitted Successfully!</h3>
-                    <p style="margin-bottom: 1rem;">Thank you for your service request. We will review your requirements and contact you within 24 hours with a customized quote.</p>
+                    <h3>Booking Request Submitted Successfully!</h3>
+                    <p style="margin-bottom: 1rem;">Your booking ID is: <strong id="bookingIdDisplay"></strong></p>
+                    <p style="margin-bottom: 1rem;">Thank you for your booking request. Your request is now pending admin approval.</p>
                     <div style="background: #f0f9ff; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
                         <h4 style="color: #0c4a6e; margin-bottom: 0.5rem;">What happens next?</h4>
                         <ul style="text-align: left; color: #0c4a6e;">
-                            <li>Our team will review your request within 2 hours</li>
-                            <li>You'll receive a detailed quote within 24 hours</li>
-                            <li>We'll discuss any special requirements or modifications</li>
-                            <li>Once approved, we'll schedule your shipment</li>
+                            <li>Our admin team will review your booking request</li>
+                            <li>Once approved, you'll be able to proceed to payment</li>
+                            <li>You'll receive payment instructions with your unique reference number</li>
+                            <li>After payment confirmation, we'll schedule your shipment</li>
                         </ul>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <a href="booking-status.html" class="btn btn-primary">Check Booking Status</a>
                     </div>
                 </div>
             </div>
@@ -318,6 +326,7 @@
                 lastName: document.getElementById('lastName').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
+                idNumber: document.getElementById('idNumber').value,
                 company: document.getElementById('company').value,
                 serviceType: document.getElementById('serviceType').value,
                 urgency: document.getElementById('urgency').value,
@@ -339,7 +348,7 @@
             };
             
             // Validate required fields
-            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'serviceType', 'urgency', 'packageDescription', 'pickupLocation', 'deliveryLocation', 'contactPreference'];
+            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'idNumber', 'serviceType', 'urgency', 'packageDescription', 'pickupLocation', 'deliveryLocation', 'contactPreference'];
             const missingFields = requiredFields.filter(field => !formData[field]);
             
             if (missingFields.length > 0) {
@@ -347,11 +356,26 @@
                 return;
             }
             
-            // Simulate form submission
-            console.log('Service Request Data:', formData);
+            // Add booking ID and status
+            const bookingId = 'BK' + Date.now() + Math.floor(Math.random() * 1000);
+            const booking = {
+                ...formData,
+                id: bookingId,
+                status: 'pending',
+                submittedAt: new Date().toISOString(),
+                approvedAt: null
+            };
+            
+            // Save booking to localStorage
+            const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            existingBookings.push(booking);
+            localStorage.setItem('bookings', JSON.stringify(existingBookings));
+            
+            console.log('Booking saved:', booking);
             
             // Show success message
             document.getElementById('serviceRequestForm').style.display = 'none';
+            document.getElementById('bookingIdDisplay').textContent = bookingId;
             document.getElementById('requestSuccess').style.display = 'block';
             
             // Send email using EmailJS (free service)
@@ -377,383 +401,4 @@
     </script>
 </body>
 </html>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request Service - @Phenyodev</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-truck"></i>
-                <span>@Phenyodev</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="index.html#services" class="nav-link">Services</a></li>
-                <li><a href="service-request.html" class="nav-link active">Request Service</a></li>
-                <li><a href="index.html#about" class="nav-link">About</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Header -->
-    <section class="hero" style="min-height: 60vh; padding-top: 120px;">
-        <div class="hero-content">
-            <h1>Request Logistics Service</h1>
-            <p>Submit your specific logistics requirements and get a customized quote for your shipping needs</p>
-            <a href="index.html" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
-            </a>
-        </div>
-    </section>
-
-    <!-- Service Request Form -->
-    <section class="services" style="padding: 3rem 0;">
-        <div class="container">
-            <div class="calculation-container">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">
-                    <i class="fas fa-clipboard-list"></i> Service Request Form
-                </h2>
-                
-                <form class="calculation-form" id="serviceRequestForm">
-                    <!-- Personal Information -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Personal Information</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="firstName">First Name *</label>
-                                <input type="text" id="firstName" required placeholder="Enter first name">
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name *</label>
-                                <input type="text" id="lastName" required placeholder="Enter last name">
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" required placeholder="Enter email address">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" required placeholder="Enter phone number">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="company">Company Name (Optional)</label>
-                            <input type="text" id="company" placeholder="Enter company name">
-                        </div>
-                    </div>
-
-                    <!-- Service Details -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Service Details</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="serviceType">Service Type *</label>
-                                <select id="serviceType" required>
-                                    <option value="">Select service type</option>
-                                    <option value="liquid">Liquid Package Shipping</option>
-                                    <option value="solid">Solid Package Shipping</option>
-                                    <option value="air">Air Freight</option>
-                                    <option value="sea">Ocean Freight</option>
-                                    <option value="ground">Ground Transport</option>
-                                    <option value="warehouse">Warehousing</option>
-                                    <option value="custom">Custom Solution</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="urgency">Urgency Level *</label>
-                                <select id="urgency" required>
-                                    <option value="">Select urgency</option>
-                                    <option value="standard">Standard (3-7 days)</option>
-                                    <option value="express">Express (1-3 days)</option>
-                                    <option value="urgent">Urgent (Same day)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="packageDescription">Package/Cargo Description *</label>
-                            <textarea id="packageDescription" rows="3" required placeholder="Describe your package, cargo, or shipping requirements in detail"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Details -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Shipping Details</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="pickupLocation">Pickup Location *</label>
-                                <input type="text" id="pickupLocation" required placeholder="Enter pickup address">
-                            </div>
-                            <div class="form-group">
-                                <label for="deliveryLocation">Delivery Location *</label>
-                                <input type="text" id="deliveryLocation" required placeholder="Enter delivery address">
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="weight">Weight (kg)</label>
-                                <input type="number" id="weight" min="0.1" step="0.1" placeholder="Enter weight">
-                            </div>
-                            <div class="form-group">
-                                <label for="dimensions">Dimensions (cm)</label>
-                                <input type="text" id="dimensions" placeholder="L x W x H">
-                            </div>
-                            <div class="form-group">
-                                <label for="quantity">Quantity</label>
-                                <input type="number" id="quantity" min="1" value="1" placeholder="Number of items">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Special Requirements -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Special Requirements</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="temperatureControl">
-                                    Temperature Control Required
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="specialHandling">
-                                    Special Handling Required
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="insurance">
-                                    Additional Insurance Coverage
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="tracking">
-                                    Real-time Tracking Required
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="specialInstructions">Special Instructions</label>
-                            <textarea id="specialInstructions" rows="3" placeholder="Any additional requirements or special instructions"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Timeline -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Timeline</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="pickupDate">Preferred Pickup Date</label>
-                                <input type="date" id="pickupDate">
-                            </div>
-                            <div class="form-group">
-                                <label for="deliveryDate">Required Delivery Date</label>
-                                <input type="date" id="deliveryDate">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Budget -->
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Budget & Contact Preference</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div class="form-group">
-                                <label for="budget">Budget Range (Optional)</label>
-                                <select id="budget">
-                                    <option value="">Select budget range</option>
-                                    <option value="economy">Economy ($100-$500)</option>
-                                    <option value="standard">Standard ($500-$2000)</option>
-                                    <option value="premium">Premium ($2000-$5000)</option>
-                                    <option value="custom">Custom/No Limit</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="contactPreference">Preferred Contact Method</label>
-                                <select id="contactPreference" required>
-                                    <option value="">Select preference</option>
-                                    <option value="email">Email</option>
-                                    <option value="phone">Phone Call</option>
-                                    <option value="whatsapp">WhatsApp</option>
-                                    <option value="any">Any Method</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1.2rem;">
-                        <i class="fas fa-paper-plane"></i>
-                        Submit Service Request
-                    </button>
-                </form>
-
-                <div id="requestSuccess" class="calculation-result" style="display: none;">
-                    <h3>Service Request Submitted Successfully!</h3>
-                    <p style="margin-bottom: 1rem;">Thank you for your service request. We will review your requirements and contact you within 24 hours with a customized quote.</p>
-                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
-                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem;">What happens next?</h4>
-                        <ul style="text-align: left; color: #0c4a6e;">
-                            <li>Our team will review your request within 2 hours</li>
-                            <li>You'll receive a detailed quote within 24 hours</li>
-                            <li>We'll discuss any special requirements or modifications</li>
-                            <li>Once approved, we'll schedule your shipment</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Our Service -->
-    <section class="about" style="padding: 3rem 0;">
-        <div class="container">
-            <h2 style="text-align: center; margin-bottom: 3rem;">Why Choose Our Service Request System?</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <i class="fas fa-clock"></i>
-                    <h3>Quick Response</h3>
-                    <p>Get a response within 2 hours and a detailed quote within 24 hours for your specific requirements.</p>
-                </div>
-                <div class="service-card">
-                    <i class="fas fa-calculator"></i>
-                    <h3>Customized Quotes</h3>
-                    <p>Receive personalized pricing based on your exact specifications and requirements.</p>
-                </div>
-                <div class="service-card">
-                    <i class="fas fa-headset"></i>
-                    <h3>Expert Consultation</h3>
-                    <p>Our logistics experts will review your request and provide professional recommendations.</p>
-                </div>
-                <div class="service-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Secure & Confidential</h3>
-                    <p>Your information is protected and your requirements remain confidential throughout the process.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>@Phenyodev</h3>
-                    <p>Your trusted partner in logistics and shipping solutions.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="liquid-packages.html">Liquid Packages</a></li>
-                        <li><a href="solid-packages.html">Solid Packages</a></li>
-                        <li><a href="service-request.html">Request Service</a></li>
-                        <li><a href="index.html#services">Freight Services</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="index.html#about">About Us</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 @PHENYODEV. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-    <script>
-        // Service Request Form Handling
-        document.getElementById('serviceRequestForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                company: document.getElementById('company').value,
-                serviceType: document.getElementById('serviceType').value,
-                urgency: document.getElementById('urgency').value,
-                packageDescription: document.getElementById('packageDescription').value,
-                pickupLocation: document.getElementById('pickupLocation').value,
-                deliveryLocation: document.getElementById('deliveryLocation').value,
-                weight: document.getElementById('weight').value,
-                dimensions: document.getElementById('dimensions').value,
-                quantity: document.getElementById('quantity').value,
-                temperatureControl: document.getElementById('temperatureControl').checked,
-                specialHandling: document.getElementById('specialHandling').checked,
-                insurance: document.getElementById('insurance').checked,
-                tracking: document.getElementById('tracking').checked,
-                specialInstructions: document.getElementById('specialInstructions').value,
-                pickupDate: document.getElementById('pickupDate').value,
-                deliveryDate: document.getElementById('deliveryDate').value,
-                budget: document.getElementById('budget').value,
-                contactPreference: document.getElementById('contactPreference').value
-            };
-            
-            // Validate required fields
-            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'serviceType', 'urgency', 'packageDescription', 'pickupLocation', 'deliveryLocation', 'contactPreference'];
-            const missingFields = requiredFields.filter(field => !formData[field]);
-            
-            if (missingFields.length > 0) {
-                alert('Please fill in all required fields: ' + missingFields.join(', '));
-                return;
-            }
-            
-            // Simulate form submission
-            console.log('Service Request Data:', formData);
-            
-            // Show success message
-            document.getElementById('serviceRequestForm').style.display = 'none';
-            document.getElementById('requestSuccess').style.display = 'block';
-            
-            // Send email using EmailJS (free service)
-            // You'll need to sign up at emailjs.com and replace the service/user/template IDs
-            // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData, 'YOUR_USER_ID')
-            //     .then(function(response) {
-            //         console.log('SUCCESS!', response.status, response.text);
-            //     }, function(error) {
-            //         console.log('FAILED...', error);
-            //     });
-            
-            // Alternative: Use Formspree (free form handling service)
-            // Just change the form action to: action="https://formspree.io/f/YOUR_FORM_ID"
-            // And remove the JavaScript form handling
-        });
-
-        // Add active class to current nav item
-        document.querySelectorAll('.nav-link').forEach(link => {
-            if (link.href.includes('service-request.html')) {
-                link.classList.add('active');
-            }
-        });
-    </script>
-</body>
-</html>
->>>>>>> a9cf3c4 (Initial commit)
+=

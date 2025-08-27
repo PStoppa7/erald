@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Status - @Phenyodev</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .status-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 80px;
+        }
+        
+        .search-section {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .search-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .search-btn:hover {
+            background: #2563eb;
+        }
+        
+        .booking-result {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .result-header {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .booking-id-display {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .result-content {
+            padding: 1.5rem;
+        }
+        
+        .progress-timeline {
+            margin: 2rem 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 2rem;
+            width: 2px;
+            height: calc(100% + 0.5rem);
+            background: #e5e7eb;
+        }
+        
+        .timeline-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .timeline-icon.completed {
+            background: #10b981;
+            color: white;
+        }
+        
+        .timeline-icon.current {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .timeline-icon.pending {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .timeline-content h4 {
+            margin: 0 0 0.25rem 0;
+            color: #1e293b;
+        }
+        
+        .timeline-content p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .payment-section {
+            background: #f0f9ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .payment-section h4 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+        
+        .reference-number {
+            background: white;
+            border: 2px dashed #3b82f6;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .reference-number .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            font-family: monospace;
+        }
+        
+        .not-found {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+        
+        .not-found i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>@Phenyodev</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="service-request.html" class="nav-link">Request Service</a></li>
+                <li><a href="booking-status.html" class="nav-link active">Check Status</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="status-header">
+        <div class="container">
+            <h1><i class="fas fa-search"></i> Check Booking Status</h1>
+            <p>Enter your booking ID to check the current status of your request</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <form class="search-form" id="statusSearchForm">
+                <input type="text" id="bookingIdInput" class="search-input" placeholder="Enter your booking ID (e.g., BK1234567890123)" required>
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="services" style="padding: 3rem 0;">
+        <div class="container">
+            <!-- Booking Result -->
+            <div id="bookingResult" class="booking-result" style="display: none;">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+
+            <!-- Not Found -->
+            <div id="notFound" class="not-found" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>Booking Not Found</h3>
+                <p>No booking found with the provided ID. Please check your booking ID and try again.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>@Phenyodev</h3>
+                    <p>Your trusted partner in logistics and shipping solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="liquid-packages.html">Liquid Packages</a></li>
+                        <li><a href="solid-packages.html">Solid Packages</a></li>
+                        <li><a href="service-request.html">Request Service</a></li>
+                        <li><a href="booking-status.html">Check Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 @PHENYODEV. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        class BookingStatusChecker {
+            constructor() {
+                this.setupEventListeners();
+                this.checkUrlParams();
+            }
+
+            setupEventListeners() {
+                document.getElementById('statusSearchForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.searchBooking();
+                });
+            }
+
+            checkUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingId = urlParams.get('id');
+                if (bookingId) {
+                    document.getElementById('bookingIdInput').value = bookingId;
+                    this.searchBooking();
+                }
+            }
+
+            searchBooking() {
+                const bookingId = document.getElementById('bookingIdInput').value.trim();
+                if (!bookingId) return;
+
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const booking = bookings.find(b => b.id === bookingId);
+
+                if (booking) {
+                    this.displayBookingResult(booking);
+                } else {
+                    this.displayNotFound();
+                }
+            }
+
+            displayBookingResult(booking) {
+                document.getElementById('notFound').style.display = 'none';
+                
+                const resultDiv = document.getElementById('bookingResult');
+                resultDiv.innerHTML = this.renderBookingResult(booking);
+                resultDiv.style.display = 'block';
+
+                // Setup payment button if approved
+                if (booking.status === 'approved') {
+                    const paymentBtn = document.getElementById('proceedToPayment');
+                    if (paymentBtn) {
+                        paymentBtn.addEventListener('click', () => {
+                            const referenceNumber = this.generateReferenceNumber(booking.idNumber);
+                            window.location.href = `payment-method.html?bookingId=${booking.id}&reference=${referenceNumber}`;
+                        });
+                    }
+                }
+            }
+
+            displayNotFound() {
+                document.getElementById('bookingResult').style.display = 'none';
+                document.getElementById('notFound').style.display = 'block';
+            }
+
+            renderBookingResult(booking) {
+                const statusClass = `status-${booking.status}`;
+                const submittedDate = new Date(booking.submittedAt).toLocaleDateString();
+                const approvedDate = booking.approvedAt ? new Date(booking.approvedAt).toLocaleDateString() : null;
+
+                return `
+                    <div class="result-header">
+                        <div class="booking-id-display">Booking ID: ${booking.id}</div>
+                        <div class="status-indicator ${statusClass}">
+                            <i class="fas ${this.getStatusIcon(booking.status)}"></i>
+                            ${booking.status.toUpperCase()}
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        <div class="progress-timeline">
+                            ${this.renderTimeline(booking)}
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                            <div>
+                                <h4 style="color: #374151; margin-bottom: 0.5rem;">Customer Information</h4>
+                                <p><strong>${booking.firstName} ${booking.lastName}</strong></p>
+                                <p>ID: ${booking.idNumber}</p>
+                                <p>Email: ${booking.email}</p>
+                                <p>Phone: ${booking.phone}</p>
+                            </div>
+                            <div>
+                                <h4 style="color: #374151; margin-bottom: 0.5rem;">Service Details</h4>
+                                <p>Type: ${booking.serviceType}</p>
+                                <p>Urgency: ${booking.urgency}</p>
+                                <p>From: ${booking.pickupLocation}</p>
+                                <p>To: ${booking.deliveryLocation}</p>
+                            </div>
+                        </div>
+
+                        ${booking.status === 'approved' ? this.renderPaymentSection(booking) : ''}
+                    </div>
+                `;
+            }
+
+            renderTimeline(booking) {
+                const items = [
+                    {
+                        title: 'Request Submitted',
+                        description: `Submitted on ${new Date(booking.submittedAt).toLocaleDateString()}`,
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Under Review',
+                        description: 'Your request is being reviewed by our team',
+                        status: booking.status === 'pending' ? 'current' : 'completed'
+                    },
+                    {
+                        title: booking.status === 'rejected' ? 'Request Rejected' : 'Request Approved',
+                        description: booking.status === 'rejected' 
+                            ? 'Your request has been rejected. Please contact us for more information.'
+                            : booking.status === 'approved'
+                                ? `Approved on ${new Date(booking.approvedAt).toLocaleDateString()}`
+                                : 'Waiting for admin approval',
+                        status: booking.status === 'pending' ? 'pending' : booking.status === 'rejected' ? 'rejected' : 'completed'
+                    },
+                    {
+                        title: 'Payment',
+                        description: 'Proceed to payment when approved',
+                        status: booking.status === 'approved' ? 'current' : 'pending'
+                    }
+                ];
+
+                return items.map(item => `
+                    <div class="timeline-item">
+                        <div class="timeline-icon ${item.status}">
+                            <i class="fas ${this.getTimelineIcon(item.status)}"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>${item.title}</h4>
+                            <p>${item.description}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderPaymentSection(booking) {
+                const referenceNumber = this.generateReferenceNumber(booking.idNumber);
+                
+                return `
+                    <div class="payment-section">
+                        <h4><i class="fas fa-credit-card"></i> Ready for Payment</h4>
+                        <p>Your booking has been approved! You can now proceed to payment.</p>
+                        
+                        <div class="reference-number">
+                            <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">Your Reference Number:</p>
+                            <div class="number">${referenceNumber}</div>
+                            <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.875rem;">Use this reference number for payment</p>
+                        </div>
+                        
+                        <button id="proceedToPayment" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                            <i class="fas fa-arrow-right"></i> Proceed to Payment
+                        </button>
+                    </div>
+                `;
+            }
+
+            generateReferenceNumber(idNumber) {
+                // Generate reference number based on ID number
+                const timestamp = Date.now().toString().slice(-6);
+                const idHash = idNumber.slice(-4).padStart(4, '0');
+                return `REF-${idHash}-${timestamp}`;
+            }
+
+            getStatusIcon(status) {
+                const icons = {
+                    pending: 'fa-clock',
+                    approved: 'fa-check-circle',
+                    rejected: 'fa-times-circle'
+                };
+                return icons[status] || 'fa-question-circle';
+            }
+
+            getTimelineIcon(status) {
+                const icons = {
+                    completed: 'fa-check',
+                    current: 'fa-clock',
+                    pending: 'fa-circle',
+                    rejected: 'fa-times'
+                };
+                return icons[status] || 'fa-circle';
+            }
+        }
+
+        // Initialize status checker when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new BookingStatusChecker();
+        });
+    </script>
+</body>
+</html>

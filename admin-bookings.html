@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Bookings - @Phenyodev</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 80px;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-left: 4px solid #e2e8f0;
+        }
+        
+        .booking-card.pending {
+            border-left-color: #f59e0b;
+        }
+        
+        .booking-card.approved {
+            border-left-color: #10b981;
+        }
+        
+        .booking-card.rejected {
+            border-left-color: #ef4444;
+        }
+        
+        .booking-header {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .booking-id {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .booking-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .booking-content {
+            padding: 1.5rem;
+        }
+        
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-group h4 {
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .detail-group p {
+            color: #6b7280;
+            margin: 0.25rem 0;
+        }
+        
+        .booking-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .btn-approve {
+            background: #10b981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-approve:hover {
+            background: #059669;
+        }
+        
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-reject:hover {
+            background: #dc2626;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .filter-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>@Phenyodev Admin</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="admin-bookings.html" class="nav-link active">Manage Bookings</a></li>
+                <li><a href="service-request.html" class="nav-link">New Request</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Header -->
+    <section class="admin-header">
+        <div class="container">
+            <h1><i class="fas fa-cogs"></i> Booking Management</h1>
+            <p>Review and approve customer booking requests</p>
+        </div>
+    </section>
+
+    <!-- Bookings Management -->
+    <section class="services" style="padding: 3rem 0;">
+        <div class="container">
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All Bookings</button>
+                <button class="filter-tab" data-filter="pending">Pending</button>
+                <button class="filter-tab" data-filter="approved">Approved</button>
+                <button class="filter-tab" data-filter="rejected">Rejected</button>
+            </div>
+
+            <!-- Bookings List -->
+            <div id="bookingsList">
+                <!-- Bookings will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No bookings found</h3>
+                <p>No bookings match your current filter.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>@Phenyodev Admin</h3>
+                    <p>Logistics management system.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Admin Tools</h4>
+                    <ul>
+                        <li><a href="admin-bookings.html">Manage Bookings</a></li>
+                        <li><a href="service-request.html">New Request</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 @PHENYODEV. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        class BookingManager {
+            constructor() {
+                this.currentFilter = 'all';
+                this.loadBookings();
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Filter tabs
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.setActiveFilter(e.target.dataset.filter);
+                    });
+                });
+            }
+
+            setActiveFilter(filter) {
+                this.currentFilter = filter;
+                
+                // Update active tab
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.filter === filter);
+                });
+                
+                this.renderBookings();
+            }
+
+            loadBookings() {
+                this.bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                this.renderBookings();
+            }
+
+            renderBookings() {
+                const bookingsList = document.getElementById('bookingsList');
+                const emptyState = document.getElementById('emptyState');
+                
+                let filteredBookings = this.bookings;
+                if (this.currentFilter !== 'all') {
+                    filteredBookings = this.bookings.filter(booking => booking.status === this.currentFilter);
+                }
+
+                if (filteredBookings.length === 0) {
+                    bookingsList.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                
+                bookingsList.innerHTML = filteredBookings.map(booking => this.renderBookingCard(booking)).join('');
+                
+                // Setup action buttons
+                this.setupActionButtons();
+            }
+
+            renderBookingCard(booking) {
+                const statusClass = `status-${booking.status}`;
+                const cardClass = booking.status;
+                const submittedDate = new Date(booking.submittedAt).toLocaleDateString();
+                
+                return `
+                    <div class="booking-card ${cardClass}" data-booking-id="${booking.id}">
+                        <div class="booking-header">
+                            <div>
+                                <span class="booking-id">${booking.id}</span>
+                                <span class="booking-status ${statusClass}">${booking.status.toUpperCase()}</span>
+                            </div>
+                            <div style="color: #6b7280; font-size: 0.875rem;">
+                                Submitted: ${submittedDate}
+                            </div>
+                        </div>
+                        <div class="booking-content">
+                            <div class="booking-details">
+                                <div class="detail-group">
+                                    <h4>Customer Information</h4>
+                                    <p><strong>${booking.firstName} ${booking.lastName}</strong></p>
+                                    <p>ID: ${booking.idNumber}</p>
+                                    <p>Email: ${booking.email}</p>
+                                    <p>Phone: ${booking.phone}</p>
+                                    ${booking.company ? `<p>Company: ${booking.company}</p>` : ''}
+                                </div>
+                                <div class="detail-group">
+                                    <h4>Service Details</h4>
+                                    <p>Type: ${booking.serviceType}</p>
+                                    <p>Urgency: ${booking.urgency}</p>
+                                    <p>Budget: ${booking.budget || 'Not specified'}</p>
+                                    <p>Contact: ${booking.contactPreference}</p>
+                                </div>
+                                <div class="detail-group">
+                                    <h4>Shipping Information</h4>
+                                    <p><strong>From:</strong> ${booking.pickupLocation}</p>
+                                    <p><strong>To:</strong> ${booking.deliveryLocation}</p>
+                                    ${booking.weight ? `<p>Weight: ${booking.weight} kg</p>` : ''}
+                                    ${booking.dimensions ? `<p>Dimensions: ${booking.dimensions}</p>` : ''}
+                                    ${booking.quantity ? `<p>Quantity: ${booking.quantity}</p>` : ''}
+                                </div>
+                                <div class="detail-group">
+                                    <h4>Package Description</h4>
+                                    <p>${booking.packageDescription}</p>
+                                    ${booking.specialInstructions ? `<p><strong>Special Instructions:</strong> ${booking.specialInstructions}</p>` : ''}
+                                </div>
+                            </div>
+                            
+                            ${booking.status === 'pending' ? `
+                                <div class="booking-actions">
+                                    <button class="btn-reject" data-action="reject" data-booking-id="${booking.id}">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                    <button class="btn-approve" data-action="approve" data-booking-id="${booking.id}">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            setupActionButtons() {
+                document.querySelectorAll('[data-action]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const action = e.target.dataset.action;
+                        const bookingId = e.target.dataset.bookingId;
+                        this.handleBookingAction(bookingId, action);
+                    });
+                });
+            }
+
+            handleBookingAction(bookingId, action) {
+                const confirmation = confirm(`Are you sure you want to ${action} booking ${bookingId}?`);
+                if (!confirmation) return;
+
+                // Update booking status
+                this.bookings = this.bookings.map(booking => {
+                    if (booking.id === bookingId) {
+                        booking.status = action === 'approve' ? 'approved' : 'rejected';
+                        booking.approvedAt = action === 'approve' ? new Date().toISOString() : null;
+                    }
+                    return booking;
+                });
+
+                // Save to localStorage
+                localStorage.setItem('bookings', JSON.stringify(this.bookings));
+
+                // Show success message
+                alert(`Booking ${bookingId} has been ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
+
+                // Refresh display
+                this.renderBookings();
+            }
+        }
+
+        // Initialize booking manager when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new BookingManager();
+        });
+    </script>
+</body>
+</html>
