@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Method Selection</title>
+</head>
+<body>
+  <form id="paymentForm">
+    <label for="customerId">ID Number:</label>
+    <input type="text" id="customerId" name="customerId" required>
+    <label for="paymentType">Payment Method:</label>
+    <select id="paymentType" name="paymentType" required>
+      <option value="">Select...</option>
+      <option value="EFT">EFT</option>
+      <option value="Online">Online Payment</option>
+    </select>
+    <button type="submit">Request Payment</button>
+  </form>
+  <div id="referenceOutput"></div>
+  <script>
+    document.getElementById('paymentForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const customerId = document.getElementById('customerId').value;
+      const paymentType = document.getElementById('paymentType').value;
+      const response = await fetch('/generate-reference', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ customerId, paymentType })
+      });
+      const result = await response.json();
+      document.getElementById('referenceOutput').innerText =
+        'Your reference number is: ' + result.reference;
+    };
+  </script>
+</body>
+</html>
