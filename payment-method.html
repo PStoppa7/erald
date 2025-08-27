@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method - @Phenyodev</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .payment-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 80px;
+        }
+        
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .booking-info {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .booking-info h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .info-value {
+            color: #6b7280;
+        }
+        
+        .reference-section {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .reference-number {
+            background: white;
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .reference-number::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #10b981, #059669, #047857);
+            border-radius: 12px;
+            z-index: -1;
+        }
+        
+        .reference-title {
+            color: #059669;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reference-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #047857;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin: 0.5rem 0;
+        }
+        
+        .reference-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .copy-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-button:hover {
+            background: #059669;
+        }
+        
+        .payment-methods {
+            padding: 2rem;
+        }
+        
+        .payment-methods h3 {
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .payment-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .payment-option:hover {
+            border-color: #10b981;
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.1);
+        }
+        
+        .payment-option.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .payment-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .payment-icon {
+            font-size: 2rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .payment-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        
+        .instructions-section {
+            padding: 2rem;
+            background: #fffbeb;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .instructions-section h4 {
+            color: #92400e;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .instruction-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .step-number {
+            background: #f59e0b;
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .contact-section {
+            padding: 2rem;
+            background: #f8fafc;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .contact-section h4 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+        }
+        
+        .unauthorized {
+            text-align: center;
+            padding: 3rem;
+            color: #ef4444;
+        }
+        
+        .unauthorized i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>@Phenyodev</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="service-request.html" class="nav-link">Request Service</a></li>
+                <li><a href="booking-status.html" class="nav-link">Check Status</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="payment-header">
+        <div class="container">
+            <h1><i class="fas fa-credit-card"></i> Payment Method</h1>
+            <p>Complete your payment to confirm your booking</p>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="services" style="padding: 3rem 0;">
+        <div class="container">
+            <!-- Payment Container -->
+            <div id="paymentContainer" class="payment-container" style="display: none;">
+                <!-- Booking Information -->
+                <div class="booking-info">
+                    <h3><i class="fas fa-info-circle"></i> Booking Information</h3>
+                    <div class="info-grid" id="bookingInfo">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Reference Number Section -->
+                <div class="reference-section">
+                    <h3><i class="fas fa-hashtag"></i> Your Payment Reference Number</h3>
+                    <div class="reference-number">
+                        <div class="reference-title">Reference Number</div>
+                        <div class="reference-value" id="referenceNumber">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="reference-subtitle">Use this reference number when making payment</div>
+                        <button class="copy-button" onclick="copyReferenceNumber()">
+                            <i class="fas fa-copy"></i> Copy Reference Number
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-methods">
+                    <h3><i class="fas fa-payment"></i> Choose Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-option" for="eft">
+                            <input type="radio" id="eft" name="paymentMethod" value="eft">
+                            <div class="payment-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="payment-title">Electronic Fund Transfer (EFT)</div>
+                            <div class="payment-description">
+                                Transfer funds directly from your bank account to ours using online banking or bank transfer.
+                            </div>
+                            <div class="payment-details">
+                                <strong>Bank Details:</strong><br>
+                                Bank: Standard Bank<br>
+                                Account Name: @Phenyodev Logistics<br>
+                                Account Number: 1234567890<br>
+                                Branch Code: 051001<br>
+                                Reference: Use your reference number above
+                            </div>
+                        </label>
+
+                        <label class="payment-option" for="online">
+                            <input type="radio" id="online" name="paymentMethod" value="online">
+                            <div class="payment-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="payment-title">Online Payment</div>
+                            <div class="payment-description">
+                                Pay securely online using your credit card, debit card, or digital wallet.
+                            </div>
+                            <div class="payment-details">
+                                <strong>Available Options:</strong><br>
+                                • Credit/Debit Cards (Visa, MasterCard)<br>
+                                • PayFast Secure Gateway<br>
+                                • Instant EFT<br>
+                                Reference: Use your reference number above
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Payment Instructions -->
+                <div class="instructions-section">
+                    <h4><i class="fas fa-list-ol"></i> Payment Instructions</h4>
+                    <ol class="instruction-list">
+                        <li>
+                            <span class="step-number">1</span>
+                            <span>Choose your preferred payment method above</span>
+                        </li>
+                        <li>
+                            <span class="step-number">2</span>
+                            <span>Copy your reference number and use it when making payment</span>
+                        </li>
+                        <li>
+                            <span class="step-number">3</span>
+                            <span>Complete the payment using your chosen method</span>
+                        </li>
+                        <li>
+                            <span class="step-number">4</span>
+                            <span>Keep your payment confirmation/receipt for your records</span>
+                        </li>
+                        <li>
+                            <span class="step-number">5</span>
+                            <span>We will confirm payment and schedule your shipment within 24 hours</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="contact-section">
+                    <h4>Need Help with Payment?</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+27 123 456 7890</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>payments@phenyodev.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Mon-Fri: 8AM-6PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unauthorized Access -->
+            <div id="unauthorized" class="unauthorized" style="display: none;">
+                <i class="fas fa-lock"></i>
+                <h3>Access Denied</h3>
+                <p>This booking has not been approved yet or does not exist.</p>
+                <p>Please check your booking status or contact us for assistance.</p>
+                <div style="margin-top: 2rem;">
+                    <a href="booking-status.html" class="btn btn-primary">Check Booking Status</a>
+                    <a href="service-request.html" class="btn btn-secondary" style="margin-left: 1rem;">New Request</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>@Phenyodev</h3>
+                    <p>Your trusted partner in logistics and shipping solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="liquid-packages.html">Liquid Packages</a></li>
+                        <li><a href="solid-packages.html">Solid Packages</a></li>
+                        <li><a href="service-request.html">Request Service</a></li>
+                        <li><a href="booking-status.html">Check Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 @PHENYODEV. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        class PaymentMethodHandler {
+            constructor() {
+                this.booking = null;
+                this.referenceNumber = null;
+                this.init();
+            }
+
+            init() {
+                this.loadBookingFromUrl();
+                this.setupEventListeners();
+            }
+
+            loadBookingFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingId = urlParams.get('bookingId');
+                const reference = urlParams.get('reference');
+
+                if (!bookingId) {
+                    this.showUnauthorized();
+                    return;
+                }
+
+                const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                const booking = bookings.find(b => b.id === bookingId);
+
+                if (!booking || booking.status !== 'approved') {
+                    this.showUnauthorized();
+                    return;
+                }
+
+                this.booking = booking;
+                this.referenceNumber = reference || this.generateReferenceNumber(booking.idNumber);
+                this.displayPaymentPage();
+            }
+
+            showUnauthorized() {
+                document.getElementById('paymentContainer').style.display = 'none';
+                document.getElementById('unauthorized').style.display = 'block';
+            }
+
+            displayPaymentPage() {
+                document.getElementById('unauthorized').style.display = 'none';
+                document.getElementById('paymentContainer').style.display = 'block';
+                
+                this.populateBookingInfo();
+                this.displayReferenceNumber();
+            }
+
+            populateBookingInfo() {
+                const bookingInfo = document.getElementById('bookingInfo');
+                const submittedDate = new Date(this.booking.submittedAt).toLocaleDateString();
+                const approvedDate = new Date(this.booking.approvedAt).toLocaleDateString();
+
+                bookingInfo.innerHTML = `
+                    <div>
+                        <div class="info-item">
+                            <span class="info-label">Booking ID:</span>
+                            <span class="info-value">${this.booking.id}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Customer:</span>
+                            <span class="info-value">${this.booking.firstName} ${this.booking.lastName}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">ID Number:</span>
+                            <span class="info-value">${this.booking.idNumber}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-item">
+                            <span class="info-label">Service Type:</span>
+                            <span class="info-value">${this.booking.serviceType}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Urgency:</span>
+                            <span class="info-value">${this.booking.urgency}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Approved:</span>
+                            <span class="info-value">${approvedDate}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="info-item">
+                            <span class="info-label">From:</span>
+                            <span class="info-value">${this.booking.pickupLocation}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">To:</span>
+                            <span class="info-value">${this.booking.deliveryLocation}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Contact:</span>
+                            <span class="info-value">${this.booking.email}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            displayReferenceNumber() {
+                document.getElementById('referenceNumber').textContent = this.referenceNumber;
+            }
+
+            generateReferenceNumber(idNumber) {
+                // Generate reference number based on ID number and timestamp
+                const timestamp = Date.now().toString().slice(-6);
+                const idHash = idNumber.slice(-4).padStart(4, '0');
+                return `REF-${idHash}-${timestamp}`;
+            }
+
+            setupEventListeners() {
+                // Payment method selection
+                document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        document.querySelectorAll('.payment-option').forEach(option => {
+                            option.classList.remove('selected');
+                        });
+                        e.target.closest('.payment-option').classList.add('selected');
+                    });
+                });
+            }
+        }
+
+        // Copy reference number function
+        function copyReferenceNumber() {
+            const referenceNumber = document.getElementById('referenceNumber').textContent;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(referenceNumber).then(() => {
+                    showCopyFeedback();
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = referenceNumber;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyFeedback();
+            }
+        }
+
+        function showCopyFeedback() {
+            const button = document.querySelector('.copy-button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            button.style.background = '#059669';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '#10b981';
+            }, 2000);
+        }
+
+        // Initialize payment handler when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PaymentMethodHandler();
+        });
+    </script>
+</body>
+</html>
