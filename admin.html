@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Approvals</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-container { max-width: 1000px; margin: 4rem auto; padding: 1rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    th { background: #f8fafc; }
+    .status-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+    .pending { background: #fff7ed; color: #9a3412; }
+    .approved { background: #ecfeff; color: #155e75; }
+    .paid { background: #ecfdf5; color: #065f46; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2 style="margin-bottom: 1rem;">Payment Requests</h2>
+    <p class="muted" style="margin-bottom: 1rem;">Approve pending requests to enable online payment.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001';
+
+    async function fetchAll() {
+      // Temporary: read the JSON directly via an admin-only endpoint we don't have.
+      // We'll assemble from known references by scanning the JSON is not possible here.
+      // Instead, provide a manual input to query by reference list.
+    }
+
+    async function getByReference(reference) {
+      const res = await fetch(`${API_BASE}/api/payment-requests/${encodeURIComponent(reference)}`);
+      if (!res.ok) throw new Error('Not found');
+      return res.json();
+    }
+
+    async function approve(reference) {
+      const res = await fetch(`${API_BASE}/api/payment-requests/${encodeURIComponent(reference)}/approve`, { method: 'POST' });
+      if (!res.ok) throw new Error('Approve failed');
+      return res.json();
+    }
+
+    function addRow(data) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${data.reference}</td>
+        <td>${data.name || ''}</td>
+        <td>${data.idNumber || ''}</td>
+        <td>$${(data.amount || 0).toFixed ? data.amount.toFixed(2) : data.amount}</td>
+        <td>${data.method || ''}</td>
+        <td><span class="status-pill ${data.status}">${data.status}</span></td>
+        <td>
+          ${data.status === 'pending_admin' ? `<button data-ref="${data.reference}">Approve</button>` : ''}
+        </td>
+      `;
+      const btn = tr.querySelector('button');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          try {
+            await approve(data.reference);
+            alert('Approved');
+            location.reload();
+          } catch (e) {
+            alert('Approve failed');
+            btn.disabled = false;
+          }
+        });
+      }
+      document.getElementById('rows').appendChild(tr);
+    }
+
+    // Minimal UI: prompt for references to view
+    (async function init() {
+      const input = prompt('Enter reference(s) separated by comma to view/approve:');
+      if (!input) return;
+      const refs = input.split(',').map(s => s.trim()).filter(Boolean);
+      for (const r of refs) {
+        try {
+          const d = await getByReference(r);
+          addRow({
+            reference: d.reference,
+            name: '',
+            idNumber: d.idNumber,
+            amount: d.amount,
+            method: d.method,
+            status: d.status
+          });
+        } catch {}
+      }
+    })();
+  </script>
+</body>
+</html>

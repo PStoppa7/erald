@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - @Phenyodev</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .payment-container { max-width: 700px; margin: 0 auto; }
+        .muted { color: #64748b; }
+        .readonly-input { background: #f1f5f9; }
+    </style>
+    <script>
+        function getQueryParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name) || '';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstName = getQueryParam('firstName');
+            const lastName = getQueryParam('lastName');
+            const email = getQueryParam('email');
+            const phone = getQueryParam('phone');
+            function lockIfProvided(id, value) {
+                if (value) {
+                    const el = document.getElementById(id);
+                    el.value = value;
+                    el.readOnly = true;
+                    el.classList.add('readonly-input');
+                    el.title = 'Provided from your service request';
+                }
+            }
+            lockIfProvided('payerFirstName', firstName);
+            lockIfProvided('payerLastName', lastName);
+            lockIfProvided('payerEmail', email);
+            lockIfProvided('payerPhone', phone);
+        });
+    </script>
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-truck"></i>
+                <span>@Phenyodev</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="service-request.html" class="nav-link">Request Service</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="services" style="padding: 6rem 0 3rem;">
+        <div class="container payment-container">
+            <h2 style="text-align:center; margin-bottom: 1rem;">Secure Payment</h2>
+            <p class="muted" style="text-align:center; margin-bottom: 2rem;">Fill in your details to complete payment.</p>
+
+            <div class="section-card">
+                <form class="calculation-form" id="paymentForm">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="payerFirstName">First Name *</label>
+                            <input type="text" id="payerFirstName" required placeholder="Enter first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="payerLastName">Last Name *</label>
+                            <input type="text" id="payerLastName" required placeholder="Enter last name">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="payerEmail">Email *</label>
+                            <input type="email" id="payerEmail" required placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="payerPhone">Phone Number *</label>
+                            <input type="tel" id="payerPhone" required placeholder="Enter phone number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="payerId">ID Number *</label>
+                        <input type="text" id="payerId" required placeholder="Enter ID/Passport number">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="amount">Amount (USD) *</label>
+                            <input type="number" id="amount" min="1" step="0.01" required placeholder="Enter amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="method">Payment Method *</label>
+                            <select id="method" required>
+                                <option value="">Select method</option>
+                                <option value="card">Card (Online)</option>
+                                <option value="eft">EFT/Bank Transfer</option>
+                                <option value="mobile">Mobile Money</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="paymentSummary" class="calculation-result" style="display:none; text-align:left;">
+                        <h3>Payment Summary</h3>
+                        <ul style="list-style: none; padding-left: 0; color:#0c4a6e;">
+                            <li id="summaryBase">Base amount: $0.00</li>
+                            <li id="summaryFee">Method fee: $0.00</li>
+                            <li id="summaryTotal" style="font-weight:700;">Total to pay: $0.00</li>
+                        </ul>
+                        <p class="muted" id="feeNote"></p>
+                    </div>
+
+                    <div id="cardSection" class="section-card" style="display:none; margin-top:1rem;">
+                        <h3 style="margin-bottom: 1rem; color: #1e293b;">Card Details</h3>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="cardName">Name on Card *</label>
+                                <input type="text" id="cardName" placeholder="Enter name on card">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardNumber">Card Number *</label>
+                                <input type="text" id="cardNumber" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiry (MM/YY) *</label>
+                                <input type="text" id="cardExpiry" maxlength="5" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCvc">CVC *</label>
+                                <input type="text" id="cardCvc" inputmode="numeric" maxlength="4" placeholder="CVC">
+                            </div>
+                        </div>
+                        <p class="muted">Online card payments incur a processing fee displayed in the summary.</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1.2rem;">
+                        <i class="fas fa-lock"></i>
+                        Pay Now
+                    </button>
+                </form>
+
+                <div id="paymentSuccess" class="calculation-result" style="display:none;">
+                    <h3>Payment Initiated</h3>
+                    <p class="muted">Thank you. Your payment is being processed. A confirmation will be sent to your email.</p>
+                    <div style="margin-top:1rem; text-align:center;">
+                        <a href="index.html" class="btn btn-secondary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="text-align:center;">
+                <p>&copy; 2024 @PHENYODEV. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+
+        async function createPaymentRequest(payload) {
+            const res = await fetch(`${API_BASE}/api/payment-requests`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Failed to create payment request');
+            return res.json();
+        }
+
+        async function pollApproval(reference) {
+            const maxTries = 120; // up to ~10 minutes at 5s interval
+            for (let i = 0; i < maxTries; i++) {
+                const res = await fetch(`${API_BASE}/api/payment-requests/${encodeURIComponent(reference)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.status === 'approved') return true;
+                }
+                await new Promise(r => setTimeout(r, 5000));
+            }
+            return false;
+        }
+
+        async function createCheckout(reference) {
+            const res = await fetch(`${API_BASE}/api/payment-requests/${encodeURIComponent(reference)}/checkout`, { method: 'POST' });
+            if (!res.ok) throw new Error('Failed to create checkout');
+            return res.json();
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const required = ['payerFirstName','payerLastName','payerEmail','payerPhone','payerId','amount','method'];
+            for (const id of required) {
+                const el = document.getElementById(id);
+                if (!el.value) { alert('Please fill in all required fields.'); return; }
+            }
+            const method = document.getElementById('method').value;
+            if (method === 'card') {
+                const cardRequired = ['cardName','cardNumber','cardExpiry','cardCvc'];
+                for (const id of cardRequired) {
+                    const el = document.getElementById(id);
+                    if (!el.value) { alert('Please complete your card details.'); return; }
+                }
+            }
+            const payload = {
+                firstName: document.getElementById('payerFirstName').value,
+                lastName: document.getElementById('payerLastName').value,
+                email: document.getElementById('payerEmail').value,
+                phone: document.getElementById('payerPhone').value,
+                idNumber: document.getElementById('payerId').value,
+                amount: Number(document.getElementById('amount').value),
+                method: method
+            };
+            try {
+                const { reference, status } = await createPaymentRequest(payload);
+                alert(`Your reference: ${reference}. Waiting for admin approval...`);
+                const approved = await pollApproval(reference);
+                if (!approved) { alert('Not approved yet. Please try again later.'); return; }
+                const { url } = await createCheckout(reference);
+                window.location.href = url; // Redirect to provider checkout (or simulated)
+            } catch (err) {
+                alert(err.message || 'Something went wrong.');
+            }
+        });
+
+        // Helpers to format and compute fees/total
+        function formatCurrency(value) {
+            const num = isNaN(value) ? 0 : Number(value);
+            return '$' + num.toFixed(2);
+        }
+
+        function computeFee(amount, method) {
+            if (!amount || !method) return 0;
+            const amt = Number(amount);
+            switch (method) {
+                case 'card':
+                    return Math.max(0, amt * 0.029 + 0.30);
+                case 'mobile':
+                    return Math.max(0, amt * 0.015);
+                case 'eft':
+                default:
+                    return 0;
+            }
+        }
+
+        function updateSummary() {
+            const amount = Number(document.getElementById('amount').value);
+            const method = document.getElementById('method').value;
+            if (!amount || !method) {
+                document.getElementById('paymentSummary').style.display = 'none';
+                document.getElementById('cardSection').style.display = method === 'card' ? 'block' : 'none';
+                return;
+            }
+            const fee = computeFee(amount, method);
+            const total = amount + fee;
+            document.getElementById('summaryBase').textContent = `Base amount: ${formatCurrency(amount)}`;
+            document.getElementById('summaryFee').textContent = `Method fee: ${formatCurrency(fee)}`;
+            document.getElementById('summaryTotal').textContent = `Total to pay: ${formatCurrency(total)}`;
+            const feeNote = method === 'card' ? 'Card: 2.9% + $0.30 processing fee' : method === 'mobile' ? 'Mobile Money: 1.5% processing fee' : 'EFT: No processing fee';
+            document.getElementById('feeNote').textContent = feeNote;
+            document.getElementById('paymentSummary').style.display = 'block';
+            document.getElementById('cardSection').style.display = method === 'card' ? 'block' : 'none';
+        }
+
+        // Input listeners
+        document.getElementById('amount').addEventListener('input', updateSummary);
+        document.getElementById('method').addEventListener('change', updateSummary);
+
+        // Basic card input formatting
+        document.getElementById('cardNumber').addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').slice(0,16);
+            this.value = v.replace(/(.{4})/g,'$1 ').trim();
+        });
+        document.getElementById('cardExpiry').addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').slice(0,4);
+            if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+            this.value = v;
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+

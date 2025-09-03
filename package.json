@@ -1,0 +1,26 @@
+{
+  "name": "logistics-website",
+  "version": "1.0.0",
+  "description": "<<<<<<< HEAD # LogiFlow - Professional Logistics Website",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PStoppa7/erald.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PStoppa7/erald/issues"
+  },
+  "homepage": "https://github.com/PStoppa7/erald#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "stripe": "^18.5.0"
+  }
+}
