@@ -37,7 +37,6 @@
             lockIfProvided('payerPhone', phone);
         });
     </script>
-    
 </head>
 <body>
     <nav class="navbar">
@@ -158,6 +157,24 @@
                 </div>
             </div>
         </div>
+        <div id="eftDetails" class="section-card" style="display:none;">
+          <h3>Bank Transfer Instructions</h3>
+          <p>Please transfer the amount to the following bank account:</p>
+          <ul>
+            <li><strong>Bank Name:</strong> Example Bank</li>
+            <li><strong>Account Name:</strong> Example Company</li>
+            <li><strong>Account Number:</strong> 1234567890</li>
+            <li><strong>Branch Code:</strong> 12345</li>
+            <li><strong>Reference:</strong> <span id="eftReference"></span> <em>(Use this as your payment reference!)</em></li>
+          </ul>
+          <p>After transfer, please upload your proof of payment below:</p>
+          <form id="proofForm" enctype="multipart/form-data">
+            <input type="file" name="proof" accept="image/*,application/pdf" required>
+            <input type="hidden" name="reference" id="proofReference">
+            <button type="submit">Upload Proof of Payment</button>
+          </form>
+          <div id="proofUploadStatus"></div>
+        </div>
     </section>
 
     <footer class="footer">
@@ -226,6 +243,9 @@
             };
             try {
                 const { reference, status } = await createPaymentRequest(payload);
+                if (method === 'eft') {
+                    handleEFT(reference); // Show EFT details and proof upload
+                }
                 alert(`Your reference: ${reference}. Waiting for admin approval...`);
                 const approved = await pollApproval(reference);
                 if (!approved) { alert('Not approved yet. Please try again later.'); return; }
@@ -233,6 +253,27 @@
                 window.location.href = url; // Redirect to provider checkout (or simulated)
             } catch (err) {
                 alert(err.message || 'Something went wrong.');
+            }
+        });
+
+        // Show EFT details after submitting form for EFT
+        async function handleEFT(reference) {
+            document.getElementById('eftDetails').style.display = 'block';
+            document.getElementById('eftReference').textContent = reference;
+            document.getElementById('proofReference').value = reference;
+        }
+
+        document.getElementById('proofForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const res = await fetch('http://localhost:3001/api/proof-upload', {
+                method: 'POST',
+                body: formData,
+            });
+            if (res.ok) {
+                document.getElementById('proofUploadStatus').textContent = 'Proof uploaded! Awaiting admin confirmation.';
+            } else {
+                document.getElementById('proofUploadStatus').textContent = 'Upload failed. Please try again.';
             }
         });
 
@@ -293,5 +334,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-

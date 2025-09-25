@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const Stripe = require('stripe');
+const multer = require('multer');
+const upload = multer({ dest: 'proofs/' }); // Proof upload folder
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -156,8 +158,42 @@ app.post('/api/payment-webhook', express.raw({ type: 'application/json' }), (req
   res.sendStatus(200);
 });
 
+// Endpoint to upload proof of payment
+app.post('/api/proof-upload', upload.single('proof'), (req, res) => {
+  const reference = req.body.reference;
+  if (!reference || !req.file) return res.status(400).json({ error: 'Reference and proof required' });
+
+  // Attach proof file to payment record
+  const db = readDb();
+  const record = db.payments.find(p => p.reference === reference);
+  if (!record) return res.status(404).json({ error: 'Payment not found' });
+
+  // Save filename or file path
+  record.proof = req.file.filename;
+  writeDb(db);
+
+  res.json({ success: true });
+});
+
+// Webhook endpoint for bank notifications (stub/example)
+app.post('/api/bank-webhook', express.json(), (req, res) => {
+  // Bank should send { reference: 'REF-...', amount: 100.00, ... }
+  const { reference, amount } = req.body;
+  if (!reference) return res.status(400).json({ error: 'Reference required' });
+
+  const db = readDb();
+  const record = db.payments.find(p => p.reference === reference);
+
+  if (!record) return res.status(404).json({ error: 'Payment not found' });
+  if (record.amount != amount) return res.status(400).json({ error: 'Amount mismatch' });
+
+  record.status = 'paid';
+  record.paidAt = new Date().toISOString();
+  writeDb(db);
+
+  res.json({ success: true });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
