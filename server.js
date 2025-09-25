@@ -20,6 +20,12 @@ const stripe = STRIPE_SECRET ? new Stripe(STRIPE_SECRET) : null;
 
 app.use(bodyParser.json());
 
+// List all payments
+app.get('/api/payment-requests', (req, res) => {
+  const db = readDb();
+  res.json({ payments: db.payments });
+});
+
 // Basic CORS for local development
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
