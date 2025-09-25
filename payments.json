@@ -1,4 +1,40 @@
 {
-  "payments": []
+  "payments": [
+    {
+      "reference": "REF-9903115348084-76C106",
+      "firstName": "phenyo",
+      "lastName": "Sebogodi",
+      "email": "sebogodiphenyo7@gmail.com",
+      "phone": "0653109619",
+      "idNumber": "9903115348084",
+      "amount": 3000,
+      "method": "eft",
+      "status": "pending_admin",
+      "createdAt": "2025-09-08T10:07:54.674Z"
+    },
+    {
+      "reference": "REF-9903115348084-411FD2",
+      "firstName": "phenyo",
+      "lastName": "Sebogodi",
+      "email": "sebogodiphenyo7@gmail.com",
+      "phone": "0653109619",
+      "idNumber": "9903115348084",
+      "amount": 3000,
+      "method": "eft",
+      "status": "pending_admin",
+      "createdAt": "2025-09-08T10:14:53.544Z"
+    },
+    {
+      "reference": "REF-9903115348084-04B4F0",
+      "firstName": "phenyo",
+      "lastName": "Sebogodi",
+      "email": "sebogodiphenyo7@gmail.com",
+      "phone": "0653109619",
+      "idNumber": "9903115348084",
+      "amount": 3000,
+      "method": "eft",
+      "status": "pending_admin",
+      "createdAt": "2025-09-08T10:41:20.299Z"
+    }
+  ]
 }
-

@@ -111,7 +111,7 @@ app.post('/api/payment-requests/:reference/checkout', async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'R',
             product_data: { name: `Logistics Service (${record.reference})` },
             unit_amount: Math.round(record.amount * 100)
           },
