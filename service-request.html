@@ -1,28 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Terms & Conditions — Blue Feather Courier</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Request Service — Blue Feather Courier</title>
+  <meta name="description" content="Submit your shipment details and receive a tailored quote from Blue Feather Courier." />
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="container" style="padding:3rem 1rem; max-width:900px; margin:0 auto;">
-    <h1>Terms and Conditions</h1>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-feather"></i>
+        <span>Blue Feather Courier</span>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#services" class="nav-link">Services</a></li>
+        <li><a href="service-request.html" class="nav-link active">Request Service</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <h2>A. General</h2>
-    <p>These services are governed by the laws of the Republic of South Africa. Blue Feather Couriers reserves the right to refuse carriage of any parcel at its discretion.</p>
+  <header class="hero" style="min-height:60vh; padding-top:120px;">
+    <div class="hero-content">
+      <h1>Request Logistics Service</h1>
+      <p>Provide shipment details and we'll respond with a tailored quote and delivery timeline.</p>
+      <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+  </header>
 
-    <h2>B. Parcel Acceptance</h2>
-    <p>Items that are prohibited for carriage include illegal goods, firearms and ammunition, hazardous materials, live animals, and perishables unless prior arrangements have been agreed in writing. All consignments must be securely and appropriately packaged; Blue Feather Couriers will not accept liability for loss or damage that results from inadequate packaging.</p>
+  <main>
+    <section class="services" style="padding:3rem 0;">
+      <div class="container">
+        <div class="calculation-container">
+          <h2 style="text-align:center; margin-bottom:1.5rem; color:#1e293b;">
+            <i class="fas fa-clipboard-list"></i> Service Request Form
+          </h2>
 
-    <h2>C. Liability & Insurance</h2>
-    <p>Our standard liability is limited to R100 per parcel unless the sender purchases declared‑value insurance at an additional fee (for example, 2% of the declared value). Any claim for loss, damage or shortage must be submitted in writing within 12 hours of delivery and must include supporting documentation and, where appropriate, photographic evidence.</p>
+          <div class="form-card" aria-labelledby="formTitle">
+            <form id="serviceRequestForm" action="https://formsubmit.co/sebogodiphenyo7@gmail.com" method="POST" autocomplete="on" novalidate>
+              <!-- anti-spam honeypot -->
+              <input type="text" name="_honey" style="display:none">
+              <!-- basic formsubmit config -->
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_subject" value="New service request — Blue Feather Courier">
 
-    <h2>D. Delivery & Delays</h2>
-    <p>Blue Feather Couriers aims to provide same‑day delivery for orders placed before 12:00 PM and to meet published service level agreements. The company is not liable for delays or failures to deliver caused by circumstances outside its reasonable control, including traffic congestion, extreme weather, force majeure events, customs inspections, incorrect address or instructions supplied by the customer, or delays caused by third‑party carriers. Where material delays occur, we will communicate promptly and do our utmost to assist in resolving delivery issues.</p>
+              <div class="row">
+                <div class="field">
+                  <label for="firstName">First name *</label>
+                  <input id="firstName" name="firstName" class="input" type="text" required placeholder="John">
+                </div>
+                <div class="field">
+                  <label for="lastName">Last name *</label>
+                  <input id="lastName" name="lastName" class="input" type="text" required placeholder="Doe">
+                </div>
+              </div>
 
-    <p>If you have questions about these terms, please contact us at +27 725033817 or info@Phenyodev.com.</p>
-  </div>
+              <div class="row">
+                <div class="field">
+                  <label for="email">Email address *</label>
+                  <input id="email" name="email" class="input" type="email" required placeholder="name@example.com">
+                </div>
+                <div class="field">
+                  <label for="phone">Phone number *</label>
+                  <input id="phone" name="phone" class="input" type="tel" required placeholder="+27 72 503 3817">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="pickup">Pickup address</label>
+                <input id="pickup" name="pickup" class="input" type="text" placeholder="Pickup address or location">
+              </div>
+
+              <div class="field">
+                <label for="delivery">Delivery address</label>
+                <input id="delivery" name="delivery" class="input" type="text" placeholder="Delivery address or location">
+              </div>
+
+              <div class="field">
+                <label for="details">Shipment details</label>
+                <textarea id="details" name="details" class="textarea" placeholder="Describe items, dimensions, weight and any special handling instructions"></textarea>
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="btn btn-primary submit-btn">Submit request</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+              </div>
+
+              <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('serviceRequestForm');
+      const submitBtn = form.querySelector('.submit-btn');
+      const msgBox = document.getElementById('formMessage');
+
+      // simple client-side validation highlight
+      function validateForm() {
+        const required = form.querySelectorAll('[required]');
+        for (const el of required) {
+          if (!el.value.trim()) {
+            el.classList.add('input-error');
+            el.focus();
+            return false;
+          } else {
+            el.classList.remove('input-error');
+          }
+        }
+        return true;
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // honeypot spam check
+        if (form.querySelector('input[name="_honey"]').value) return;
+
+        if (!validateForm()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        msgBox.textContent = '';
+        msgBox.className = 'form-message';
+
+        const fd = new FormData(form);
+
+        try {
+          const res = await fetch(form.action, { method: form.method, body: fd, headers: { 'Accept': 'application/json' }});
+          if (res.ok) {
+            msgBox.classList.add('success');
+            msgBox.textContent = 'Thank you — your request has been sent. We will contact you shortly.';
+            form.reset();
+            // gentle success animation
+            msgBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            const data = await res.json().catch(() => ({}));
+            msgBox.classList.add('error');
+            msgBox.textContent = data.message || 'Submission failed — please try again later.';
+          }
+        } catch (err) {
+          msgBox.classList.add('error');
+          msgBox.textContent = 'Submission error — check your connection and try again.';
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('loading');
+      });
+    })();
+  </script>
+
+  <script src="script.js"></script>
 </body>
 </html>
