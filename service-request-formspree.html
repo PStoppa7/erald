@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request Service — Blue Feather Courier</title>
+    <meta name="description" content="Submit your logistics requirements and receive a tailored quote from Blue Feather Courier.">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -42,10 +43,18 @@
                 <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">
                     <i class="fas fa-clipboard-list"></i> Service Request Form
                 </h2>
-                <form class="calculation-form" id="serviceRequestForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+
+                <!-- Formsubmit integration -->
+                <form class="calculation-form" id="serviceRequestForm" action="https://formsubmit.co/sebogodiphenyo7@gmail.com" method="POST">
+                    <!-- Honeypot field (anti-spam) -->
+                    <input type="text" name="_honey" style="display:none">
+                    <!-- Prevent Formsubmit from redirecting automatically; we handle response via JS -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="New service request from Blue Feather website">
+
+                    <div class="section-card">
                         <h3 style="margin-bottom: 1rem; color: #1e293b;">Personal Information</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="grid-2">
                             <div class="form-group">
                                 <label for="firstName">First Name *</label>
                                 <input type="text" name="firstName" id="firstName" required placeholder="Enter first name">
@@ -55,12 +64,98 @@
                                 <input type="text" name="lastName" id="lastName" required placeholder="Enter last name">
                             </div>
                         </div>
-                        <p>Please fill in accurate contact and shipment details so our team can prepare an appropriate quote and delivery plan.</p>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" name="email" id="email" required placeholder="Enter email address">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" name="phone" id="phone" required placeholder="Enter phone number">
+                            </div>
+                        </div>
+
+                        <div style="margin-top:1rem;">
+                            <label for="pickup">Pickup Address</label>
+                            <input type="text" name="pickup" id="pickup" class="form-group" placeholder="Pickup address or location">
+                        </div>
+                        <div style="margin-top:1rem;">
+                            <label for="delivery">Delivery Address</label>
+                            <input type="text" name="delivery" id="delivery" class="form-group" placeholder="Delivery address or location">
+                        </div>
+
+                        <div style="margin-top:1rem;">
+                            <label for="details">Shipment Details</label>
+                            <textarea name="details" id="details" rows="4" placeholder="Describe the items, dimensions, required service or any special instructions"></textarea>
+                        </div>
+
+                        <p style="margin-top:1rem;">Please provide full and accurate details so we can prepare a precise quote and timeline.</p>
+
+                        <div style="display:flex; gap:1rem; margin-top:1rem;">
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                        </div>
                     </div>
                 </form>
+
+                <div id="formMessage" style="margin-top:1rem; display:none; padding:1rem; border-radius:6px;"></div>
+
             </div>
         </div>
     </section>
+
+    <script>
+    document.getElementById('serviceRequestForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        const msgBox = document.getElementById('formMessage');
+        msgBox.style.display = 'none';
+
+        // Basic honeypot check
+        if (form.querySelector('input[name="_honey"]').value) {
+            // likely spam
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const res = await fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (res.ok) {
+                msgBox.style.display = 'block';
+                msgBox.style.background = '#ecfdf5';
+                msgBox.style.border = '1px solid #10b981';
+                msgBox.style.color = '#064e3b';
+                msgBox.innerText = 'Thank you — your request has been submitted. We will contact you shortly.';
+                form.reset();
+            } else {
+                const data = await res.json().catch(()=>({}));
+                msgBox.style.display = 'block';
+                msgBox.style.background = '#ffefef';
+                msgBox.style.border = '1px solid #f43f5e';
+                msgBox.style.color = '#7f1d1d';
+                msgBox.innerText = data.message || 'Submission failed. Please try again later.';
+            }
+        } catch (err) {
+            msgBox.style.display = 'block';
+            msgBox.style.background = '#ffefef';
+            msgBox.style.border = '1px solid #f43f5e';
+            msgBox.style.color = '#7f1d1d';
+            msgBox.innerText = 'Submission error. Please check your network connection and try again.';
+        }
+
+        submitBtn.disabled = false;
+    });
+    </script>
 
     <script src="script.js"></script>
 </body>
